@@ -26,11 +26,10 @@ func Start(config *Config, ctx context.Context) error {
 
 	go func(*logrus.Logger) {
 		if err := srv.ListenAndServe(); err != nil {
-			if errors.Is(err, http.ErrServerClosed) {
-				logger.Fatal("Coudn't start server:", err)
+			if !errors.Is(err, http.ErrServerClosed) {
+				logger.Fatal(err)
 			}
 		}
-
 	}(logger)
 
 	signals := make(chan os.Signal, 1)
