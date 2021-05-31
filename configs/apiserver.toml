@@ -1,0 +1,2 @@
+bind_addr = ":3000"
+database_url = "host=localhost port=5432 user=postgres password=postgres dbname=dictionary_dev sslmode=disable"
