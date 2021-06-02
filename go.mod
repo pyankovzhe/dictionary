@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/go-chi/chi v1.5.4
+	github.com/go-chi/render v1.0.1
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.8.1

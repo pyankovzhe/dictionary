@@ -10,6 +10,7 @@ import (
 	"time"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/pyankovzhe/dictionary/internal/app/store/sqlstore"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,8 +22,9 @@ func Start(config *Config, ctx context.Context) error {
 	defer db.Close()
 
 	logger := logrus.New()
+	store := sqlstore.New(db)
 
-	srv := newServer(logger, config.BindAddr)
+	srv := newServer(logger, store, config.BindAddr)
 
 	go func(*logrus.Logger) {
 		if err := srv.ListenAndServe(); err != nil {

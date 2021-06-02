@@ -2,25 +2,26 @@ package apiserver
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/pyankovzhe/dictionary/internal/app/store"
 	"github.com/sirupsen/logrus"
 )
 
 type server struct {
 	*http.Server
 	logger *logrus.Logger
-	// store
+	store  store.Store
 }
 
-func newServer(logger *logrus.Logger, serverAddr string) *server {
+func newServer(logger *logrus.Logger, store store.Store, serverAddr string) *server {
 	s := &server{
 		Server: &http.Server{
 			Addr: serverAddr,
 		},
 		logger: logger,
+		store:  store,
 	}
 
 	r := chi.NewRouter()
@@ -42,8 +43,12 @@ func (s *server) configureRouter(router *chi.Mux) {
 		w.Write([]byte("Dictionary service"))
 	})
 
-	router.Get("/sleep-debug", func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(10 * time.Second)
-		w.Write([]byte("Ok"))
-	})
+	router.Mount("/api", s.apiRouter())
+}
+
+func (s *server) apiRouter() http.Handler {
+	r := chi.NewRouter()
+	r.Post("/card", s.CreateCard)
+
+	return r
 }
