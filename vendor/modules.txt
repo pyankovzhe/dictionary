@@ -1,6 +1,8 @@
 # github.com/BurntSushi/toml v0.3.1
 ## explicit
 github.com/BurntSushi/toml
+# github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
+## explicit
 # github.com/go-chi/chi v1.5.4
 ## explicit
 github.com/go-chi/chi
@@ -8,6 +10,9 @@ github.com/go-chi/chi/middleware
 # github.com/go-chi/render v1.0.1
 ## explicit
 github.com/go-chi/render
+# github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
+## explicit
+github.com/go-ozzo/ozzo-validation
 # github.com/jackc/chunkreader/v2 v2.0.1
 github.com/jackc/chunkreader/v2
 # github.com/jackc/pgconn v1.8.1
