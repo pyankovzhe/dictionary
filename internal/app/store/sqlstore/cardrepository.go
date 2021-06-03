@@ -12,7 +12,9 @@ type CardRepository struct {
 }
 
 func (r *CardRepository) Create(c *model.Card) error {
-	// TODO: validation
+	if err := c.Validate(); err != nil {
+		return err
+	}
 
 	return r.store.db.QueryRow(
 		"INSERT INTO cards (original, translation) VALUES ($1, $2) RETURNING id",
