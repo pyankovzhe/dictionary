@@ -3,8 +3,10 @@ package teststore_test
 import (
 	"testing"
 
+	"github.com/pyankovzhe/dictionary/internal/app/model"
 	"github.com/pyankovzhe/dictionary/internal/app/store"
 	"github.com/pyankovzhe/dictionary/internal/app/store/teststore"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCardRepository_Create(t *testing.T) {
@@ -20,7 +22,7 @@ func TestCardRepository_Find(t *testing.T) {
 	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
 
 	c := model.TestCard(t)
-	s.Account().Create(c)
+	s.Card().Create(c)
 	c, err = s.Card().Find(c.ID)
 	assert.NoError(t, err)
 	assert.NotNil(t, c)
