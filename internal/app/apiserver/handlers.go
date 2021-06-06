@@ -10,7 +10,7 @@ import (
 
 type cardResp struct {
 	Original    string `json:"original"`
-	Translation string `json:"original"`
+	Translation string `json:"translation"`
 }
 
 func (s *server) CreateCard(w http.ResponseWriter, r *http.Request) {

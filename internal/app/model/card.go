@@ -13,6 +13,6 @@ type Card struct {
 func (c *Card) Validate() error {
 	return validation.ValidateStruct(
 		c,
-		validation.Field(&c.Original, validation.Required),
+		validation.Field(&c.Original, validation.Required, validation.Length(1, 1000)),
 	)
 }
