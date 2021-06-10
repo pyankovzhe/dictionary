@@ -8,13 +8,21 @@ import (
 	"github.com/pyankovzhe/dictionary/internal/app/model"
 )
 
-type cardResp struct {
+type cardRequest struct {
 	Original    string `json:"original"`
 	Translation string `json:"translation"`
 }
 
+type cardResponse struct {
+	*model.Card
+}
+
+func (res *cardResponse) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
+}
+
 func (s *server) CreateCard(w http.ResponseWriter, r *http.Request) {
-	req := &cardResp{}
+	req := &cardRequest{}
 
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		render.Render(w, r, &ErrResponse{Code: http.StatusBadRequest, Message: err.Error()})
@@ -30,4 +38,7 @@ func (s *server) CreateCard(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, &ErrResponse{Code: http.StatusUnprocessableEntity, Message: err.Error()})
 		return
 	}
+
+	render.Status(r, http.StatusCreated)
+	render.Render(w, r, &cardResponse{Card: card})
 }
