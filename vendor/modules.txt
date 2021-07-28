@@ -17,6 +17,9 @@ github.com/go-chi/render
 github.com/go-ozzo/ozzo-validation
 # github.com/golang/snappy v0.0.1
 github.com/golang/snappy
+# github.com/google/uuid v1.0.0
+## explicit
+github.com/google/uuid
 # github.com/jackc/chunkreader/v2 v2.0.1
 github.com/jackc/chunkreader/v2
 # github.com/jackc/pgconn v1.8.1

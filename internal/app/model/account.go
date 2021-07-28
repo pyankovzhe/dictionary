@@ -1,6 +1,10 @@
 package model
 
+import (
+	"github.com/google/uuid"
+)
+
 type Account struct {
-	ID    int    `json:"id"`
-	Login string `json:"login"`
+	ID    uuid.UUID `json:"id"`
+	Login string    `json:"login"`
 }
