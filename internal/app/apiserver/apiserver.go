@@ -10,6 +10,7 @@ import (
 	"time"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/pyankovzhe/dictionary/internal/app/consumer/kafkaconsumer"
 	"github.com/pyankovzhe/dictionary/internal/app/store/sqlstore"
 	"github.com/sirupsen/logrus"
 )
@@ -23,6 +24,12 @@ func Start(config *Config, ctx context.Context) error {
 
 	logger := logrus.New()
 	store := sqlstore.New(db)
+	consumer, err := kafkaconsumer.New(ctx, logger, config.KafkaURL, "accounts", 0)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	go consumer.Consume()
 
 	srv := newServer(logger, store, config.BindAddr)
 
