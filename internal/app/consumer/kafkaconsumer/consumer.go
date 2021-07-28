@@ -22,6 +22,7 @@ func New(ctx context.Context, logger *logrus.Logger, address string, topic strin
 		Partition: partition,
 		MinBytes:  10e3, // 10KB
 		MaxBytes:  10e6, // 10MB
+		GroupID:   "dictionary-group",
 	}
 
 	r := kafka.NewReader(config)
@@ -38,7 +39,6 @@ func (c *Consumer) Close() {
 func (c *Consumer) Consume() {
 	c.logger.Info("Kafka starts to consume messages...")
 
-	c.reader.SetOffset(24)
 	for {
 		m, err := c.reader.ReadMessage(c.ctx)
 		if err != nil {

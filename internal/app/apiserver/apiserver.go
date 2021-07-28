@@ -24,11 +24,12 @@ func Start(config *Config, ctx context.Context) error {
 
 	logger := logrus.New()
 	store := sqlstore.New(db)
+
+	// Put this to cmd folder to run consumer in different proccess
 	consumer, err := kafkaconsumer.New(ctx, logger, config.KafkaURL, "accounts", 0)
 	if err != nil {
 		logger.Fatal(err)
 	}
-
 	go consumer.Consume()
 
 	srv := newServer(logger, store, config.BindAddr)
