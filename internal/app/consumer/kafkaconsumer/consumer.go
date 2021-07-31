@@ -2,11 +2,11 @@ package kafkaconsumer
 
 import (
 	"context"
-	"encoding/json"
 
-	"github.com/pyankovzhe/dictionary/internal/app/model"
+	pb "github.com/pyankovzhe/dictionary/pkg/proto/v1/eventpb"
 	"github.com/segmentio/kafka-go"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/proto"
 )
 
 type Consumer struct {
@@ -46,11 +46,19 @@ func (c *Consumer) Consume() {
 			break
 		}
 
-		acc := &model.Account{}
-		if err := json.Unmarshal(m.Value, acc); err != nil {
+		event := &pb.AccountEvent{}
+
+		if err := proto.Unmarshal(m.Value, event); err != nil {
 			c.logger.Errorf("Fail to unmarshal kafka message with offset %d: %s. Err: %s", m.Offset, m.Value, err)
 		} else {
-			c.logger.Logf(4, "message at offset %d: %v", m.Offset, acc)
+			c.logger.Logf(4, "message at offset %d: %v", m.Offset, event)
+		}
+
+		switch event.Kind {
+		case pb.EventKind_CREATED:
+			c.logger.Info("create account")
+		default:
+			c.logger.Logf(4, "nooop %v", event.Kind)
 		}
 	}
 }
