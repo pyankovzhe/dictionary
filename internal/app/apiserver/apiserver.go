@@ -2,21 +2,18 @@ package apiserver
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
-	_ "github.com/jackc/pgx/v4/stdlib"
-	"github.com/pyankovzhe/dictionary/internal/app/consumer/kafkaconsumer"
 	"github.com/pyankovzhe/dictionary/internal/app/store/sqlstore"
 	"github.com/sirupsen/logrus"
 )
 
 func Start(config *Config, ctx context.Context) error {
-	db, err := newDB(config.DatabaseURL, ctx)
+	db, err := sqlstore.NewDB("pgx", config.DatabaseURL, ctx)
 	if err != nil {
 		return err
 	}
@@ -24,13 +21,6 @@ func Start(config *Config, ctx context.Context) error {
 
 	logger := logrus.New()
 	store := sqlstore.New(db)
-
-	// Put this to cmd folder to run consumer in different proccess
-	consumer, err := kafkaconsumer.New(ctx, logger, config.KafkaURL, "accounts", 0)
-	if err != nil {
-		logger.Fatal(err)
-	}
-	go consumer.Consume()
 
 	srv := newServer(logger, store, config.BindAddr)
 
@@ -54,18 +44,4 @@ func Start(config *Config, ctx context.Context) error {
 
 	logger.Error("performing graceful shutdown")
 	return nil
-}
-
-func newDB(databaseURL string, ctx context.Context) (*sql.DB, error) {
-	db, err := sql.Open("pgx", databaseURL)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if err := db.PingContext(ctx); err != nil {
-		return nil, err
-	}
-
-	return db, nil
 }

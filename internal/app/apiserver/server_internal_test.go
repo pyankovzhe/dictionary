@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestServer_Card(t *testing.T) {
+func TestServer_CreateCard(t *testing.T) {
 	s := newServer(logrus.New(), teststore.New(), "fakeaddr")
 	testCases := []struct {
 		name         string

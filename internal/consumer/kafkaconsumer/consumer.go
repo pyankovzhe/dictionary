@@ -3,6 +3,8 @@ package kafkaconsumer
 import (
 	"context"
 
+	"github.com/pyankovzhe/dictionary/internal/app/store"
+	"github.com/pyankovzhe/dictionary/internal/consumer"
 	pb "github.com/pyankovzhe/dictionary/pkg/proto/v1/eventpb"
 	"github.com/segmentio/kafka-go"
 	"github.com/sirupsen/logrus"
@@ -13,19 +15,20 @@ type Consumer struct {
 	reader *kafka.Reader
 	ctx    context.Context
 	logger *logrus.Logger
+	store  store.Store
 }
 
-func New(ctx context.Context, logger *logrus.Logger, address string, topic string, partition int) (*Consumer, error) {
-	config := kafka.ReaderConfig{
-		Brokers:   []string{address},
-		Topic:     topic,
-		Partition: partition,
+func New(ctx context.Context, logger *logrus.Logger, store store.Store, config *consumer.Config) (*Consumer, error) {
+	readerConfig := kafka.ReaderConfig{
+		Brokers:   []string{config.KafkaURL},
+		Topic:     config.Topic,
+		Partition: config.Partition,
 		MinBytes:  10e3, // 10KB
 		MaxBytes:  10e6, // 10MB
-		GroupID:   "dictionary-group",
+		GroupID:   config.GroupID,
 	}
 
-	r := kafka.NewReader(config)
+	r := kafka.NewReader(readerConfig)
 	consumer := &Consumer{reader: r, ctx: ctx, logger: logger}
 	consumer.logger.Info("Kafka consumer initialized")
 
